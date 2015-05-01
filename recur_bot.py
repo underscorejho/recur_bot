@@ -28,17 +28,22 @@ def main():
   while True:
     try:
       # loop through all comments
+      print 'looking...'
       for comment in praw.helpers.comment_stream(r, 'all', limit=None, verbosity=0):
-        if len(commented) > 0: ### this chunk probably cuts efficiency
-          for each in r.get_submission(submission_id=commented[-1]).replies:
-            if STOP in comment.body:
-              # stop recurring on current thread
-              commented.append(comment.id)
         if username in comment.body and comment.id not in commented: # look for new calls to username
           print 'found something...'
           # wait until allowed to participate again
           print 'resting...'
           time.sleep( TEN_MINUTES )
+
+          if commented:
+            for reply in comment.replies:
+              if STOP in reply.body:
+                # stop recurring on current thread
+                commented.append(comment.id)
+                print 'thread ended...'
+                print 'looking...'
+                continue
 
           print 'commenting...'
           comment.reply('/u/recursion_bot')
