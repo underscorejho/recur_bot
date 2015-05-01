@@ -18,17 +18,32 @@ def main():
   print "start"
 
   commented = []
-  TEN_MINUTES = 600000
+
+  TEN_MINUTES = 600
+  STOP = 'end'
+
+  username = '/u/' + USER
+  print 'username is: ' + username
 
   while True:
     try:
       # loop through all comments
       for comment in praw.helpers.comment_stream(r, 'all', limit=None, verbosity=0):
-        if ("/u/recursion_bot" in comment.body and comment.id not in commented):
+        if len(commented) > 0: ### this chunk probably cuts efficiency
+          for each in r.get_submission(submission_id=commented[-1]).replies:
+            if STOP in comment.body:
+              # stop recurring on current thread
+              commented.append(comment.id)
+        if username in comment.body and comment.id not in commented: # look for new calls to username
+          print 'found something...'
+          # wait until allowed to participate again
+          print 'resting...'
+          time.sleep( TEN_MINUTES )
+
+          print 'commenting...'
           comment.reply('/u/recursion_bot')
           commented.append(comment.id)
-          # wait until allowed to participate again
-          time.sleep( TEN_MINUTES )
+          print 'looking...'
     except Exception as err:
       print err
 
