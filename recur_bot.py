@@ -11,8 +11,8 @@ import praw # python reddit API wrapper
 
 def main():
 
-  USER = os.environment.get['USER']
-  PASS = os.environment.get['PASS']
+  USER = os.environ.get['USER']
+  PASS = os.environ.get['PASS']
 
   r = praw.Reddit(user_agent = 'Recursion Bot operating on /u/recursion_bot v0.01')
   r.login(USER, PASS)
