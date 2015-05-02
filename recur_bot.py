@@ -4,15 +4,15 @@
 # Jared Henry Oviatt
 # Used RemindMeBot! on GitHub as a reference
 
-import time
-import sys
+import time # sleep()
+import os   # environment vars (config vars)
 
 import praw # python reddit API wrapper
 
 def main():
 
-  USER = sys.argv[1]
-  PASS = sys.argv[2]
+  USER = os.environment.get['USER']
+  PASS = os.environment.get['PASS']
 
   r = praw.Reddit(user_agent = 'Recursion Bot operating on /u/recursion_bot v0.01')
   r.login(USER, PASS)
@@ -22,6 +22,7 @@ def main():
 
   TEN_MINUTES = 600
   STOP = 'end'
+  ENDED = False
 
   username = '/u/' + USER
   print 'username is: ' + username
@@ -43,8 +44,13 @@ def main():
                 # stop recurring on current thread
                 commented.append(comment.id)
                 print 'thread ended...'
+                ENDED = True
                 print 'looking...'
-                continue
+                break
+          
+          if ENDED:
+            ENDED = False
+            continue
 
           print 'commenting...'
           comment.reply('/u/recursion_bot')
