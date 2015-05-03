@@ -1,1 +1,1 @@
-recur_bot: python recur_bot.py recursion_bot recursion
+worker: python recur_bot.py
